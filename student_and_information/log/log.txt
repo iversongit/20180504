@@ -1,0 +1,26 @@
+20 F:\Python\PythonCode\20180503\student_and_information\student\views.py index views 1525330981.7364755 获取学生信息成功
+20 2018-05-03 15:27:24,257 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 15:42:56,381 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 15:50:20,550 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 15:50:20,824 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 15:52:48,773 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 18:56:06,860 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 18:57:14,488 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 18:58:53,279 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 18:58:58,372 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:01:29,374 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:02:03,340 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:02:48,915 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:03:04,171 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:04:04,379 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:06:22,159 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:08:03,450 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:12:08,994 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:15:42,753 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:21:09,218 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:21:55,001 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:23:04,072 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-03 19:23:21,273 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-04 11:36:51,107 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-04 13:54:04,608 url: /stuapp/index/ method: GET 获取学生信息成功
+INFO 2018-05-04 14:16:28,670 url: /stuapp/index/ method: GET 获取学生信息成功

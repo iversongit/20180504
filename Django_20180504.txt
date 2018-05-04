@@ -1,0 +1,491 @@
+MVC(核心-->解耦，强制性的使应用程序的输入，处理和输出分开，减低各个模块之间的耦合性，方便变更，更容易重构代码，最大程度地实现了代码的重用): 
+    Model --> 进行业务逻辑判断，数据库存取（数据存取层，主要负责数据库的CRUD）
+
+    View --> 根据业务逻辑选择不同的视图（表现层）
+
+    Controller--> 将用户输入的指令和数据传递给业务模型（业务逻辑层，主要负责业务逻辑的处理）
+
+MVT(严格来说，Django的模式应该是MVT模式):
+    Model --> 负责业务与数据库（ORM）对象（主要负责数据库的CRUD）
+
+    View --> 负责业务逻辑并适当调用Model和Template（主要负责业务逻辑的处理）
+
+    Template --> 负责把页面渲染展示给用户
+
+注意:Django中还有一个url分发器，也叫作路由。主要用于将url请求发送给不同的View 处理，View再进行相关的业务逻辑处理
+    
+
+pip install virtualenv:安装virtualenv(虚拟环境)
+
+virtualenv --no-site-packages -p xxx 文件名: 安装env环境。xxx --> 指定python版本所在的路径
+virtualenv --no-site-packages 文件名:安装env环境。使用默认版本的python解释器
+
+--no-site-packages:纯净的虚拟环境，不包括外界的包/模块
+
+windows:
+cd 环境名/Script --> activate | deactivate 进入|退出env
+Linux:
+source bin/activate 进入
+source deactivate 退出
+
+pip install django==1.11:安装django环境
+
+
+django-admin startproject 项目名:创建django项目
+python manage.py runserver [ip:](默认127.0.0.1)端口号(默认8000端口):启动django项目，端口号可以不用写，启动的时候会默认随机创建一个可以使用的端口
+python manage.py startapp hello_app:创建app(模块)。该命令是在工程下创建一个名为hello_app的app
+
+app(模块内部文件简介):
+    __init__.py:初始化，配置pymysql链接的地方
+    setting.py:配置信息位置，databases等
+    urls.py:url路由，给每个请求寻找对应的方法
+    wsgi.py:网关
+    admin.py:管理后台注册模型
+    apps.py:settings.py里面注册app的时候需要使用到，一般不推荐直接使用
+    models.py:写模型的地方，定义数据库中的表结构
+    views.py:写处理业务逻辑的地方
+
+配置:
+1、settings.py文件中INSTALLED_APPS中写入创建的app的name
+2、也可以导入apps.py文件中的APPCONFIG下的name属性
+
+模型
+在models.py文件中定义class模型名称
+继承models.Model
+db_tables:定义数据库中的表名称
+
+迁移
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py makemigrations stu:强制找到stu模块进行迁移
+Navicat中指定数据库中的表django_migrations记录了所有迁移记录
+
+
+保持数据
+stu = Student()
+stu.name = "xxxx"
+stu.save()
+
+创建超级管理员的帐号和密码
+python manage.py createsuperuser
+
+path:查看PATH路径中的内容
+
+创建pycharm项目时需要指定虚拟环境，可以将不同版本的项目隔离开来
+项目上线时要将环境和项目分离开
+
+alt + enter:提示当前应用的函数所需要导入的包
+
+-----------------------------------------------
+ORM(objects relational mapping):对象关系映射，翻译机
+
+模型字段
+    CharField:字符串
+	    max_length:最大长度
+	模型参数:
+	    default='xxx':设置默认值
+            null=True: 设置是否为空，针对数据库中该字段是否可以为空
+            blank=True:设置是否为空，针对表单提交中该字段是否可以为空
+            primary_key=True:创建主键
+            unique:唯一
+	    
+    IntegerField:整数
+    FloatField:浮点数
+    BooleanField:布尔类型(1,0)
+    DateField(auto_now_add=True/auto_now=True):存放日期（年月日）                     	
+        auto_now_add=True:第一次创建数据时设置时间(1次) 
+        auto_now=True:每次登录、修改操作都会更新到最新时间(多次)
+    DateTimeField:年月日  时分秒
+	auto_now_add
+	auto_now
+
+AutoField:自动增长
+DecimalField:
+    models.DecimalField(max_digits=3,decimal_places=1) 最大值99.9
+    max_digits:总位数
+    decimal_places:小数点后的位数
+
+TextField:存长文本信息，页面等
+FileField:文件上传字段
+ImageField(upload_to=''):上传图片
+    upload_to="":指定上传图片的路径
+
+--------------------------- django过滤 ------------------------------------
+1、修改字段名
+alter table table_name change 原名称  修改后名称 类型
+
+2、objects对象
+通过模型.objects来实现数据的增删查改(CRUD)操作
+
+3、获取所有学生信息
+select * from stu
+模型.objects.all()
+
+4、获取所有女生的信息
+select * from stu where stu_sex=False
+模型.objects.filter(stu_sex=False)
+模型.objects.get(stu_sex=False)(不推荐使用)
+
+
+filter():返回满足条件的结果
+first():返回第一条数据
+last():返回最后一条数据
+count():求和
+
+gt gte: 大于  大于等于
+lt lte: 小于  小于等于
+
+5、F()/ Q()
+from django.db.models import F,Q
+
+
+班级表 学生表
+1）url --> 班级页面，展示班级
+2）所有学生信息页面
+
+------------------------------- 20180425 --------------------------------------
+get请求: www.baidu.com?s=python & j=java --> ？后面跟参数 &用来连接参数 注:参数不能过多
+post请求:  不同于get请求，参数是隐藏的，通过request.POST.get进行获取
+exclude:查询不满足条件的所有信息
+banner:滚动图
+
+Django的常规操作
+1)virtualenv
+2)startproject
+3)startapp
+4)settings --> installed_app加入app_name
+               修改databases
+               修改templates -- os.path.join(BASE_DIR, 'templates')
+               修改时区 TIME_ZONE = 'Asia/Shanghai'
+               在__init__.py中加载pymysql
+
+关联: 
+    1:1 OneToOneField: 主键和外键是一对一关系，在关联表中，只能关联一个主表的id  (一般添加到扩展表，关联到主表)
+    拓展表找主表:拓展信息对象.关联字段
+    主表找拓展表:主表对象.关联表的model_name
+
+    1:N OneToManyField
+    N:N MangToManyField
+
+on_delete=xxx:删除主表的时候，从表的状态
+    models.CASCADE:级联关系，主表删除，从表也删除(默认)
+    models.SET_NULL:主表删除，从表关联字段设置为空
+    models.PROTECT:不能删除主表
+    models.SET_DEFAULT:主表删除，从表关联字段设置为默认值
+
+静态资源加载
+    1）<img src="/static/images/xxx.png">
+    2){% load static %}
+      <img src="{% static 'images/enemy1.png' %}">
+
+for:
+    {% for stu in stus %}
+    {% empty %} # for中内容为空时执行的操作
+    {% endfor %}
+      
+if:
+    {% if xxx %}
+    {%  else  %}
+    {%  endif %}
+
+ifequal:  # 如果相等时的操作
+    {% ifequal xxx 1 %}
+    {% else %}
+    {% endifequal %}
+
+forloop
+    计数从0开始: {{ forloop.counter0 }}
+    计数从1开始: {{ forloop.counter }}
+    计数从最后开始，到1停: {{ forloop.revcounter }}
+    计数从最后开始，到0停: {{ forloop.revcounter0 }}
+
+过滤器（|）:在变量显示前修改
+example: 
+    语文成绩：{{stu.stu_chinese | add:10}} -- add:加法，增加值
+
+10. 
+权限设计
+
+用户表user
+u_name, u_sex, u_birth, u_operate_time, u_create_time
+
+角色表role
+r_name， 管理员，会员，超级VIP
+
+角色role和权限permission
+r_id
+p_id
+
+权限表 permission
+p_name
+具体权限名有，登录权限，查询用户列表信息权限，修改用户信息权限
+
+1) 查询某某用户具备那些权限
+2）判断某一个用户是否有某一个权限
+
+Jinja2 --> Python下一个被广泛应用的模版引擎，他的设计思想来源于Django的模板引擎，并扩展了其语法和一系列强大的功能。其中最显著的一个是增加了沙箱执行功能和可选的自动转义功能，这对大多应用的安全性来说是非常重要的。它基于unicode并能在python2.4之后的版本运行，包括python3。
+
+--------------------------------- 20180426 -------------------------------
+在数据库中时间会比页面显示中少8个小时，操作时需要注意
+
+过滤器
+date:
+    Y-完整年份(四位年)    m:月
+    y-简写年份(两位年）   n:日
+    H-时 24小时制         m:分
+    h-时 12小时制         s:秒
+
+
+注释：
+    {# #}:单行注释
+    {% comment %}{% endcommet %}:多行注释
+
+大小写
+    upper | lower
+    example : 姓名：{{ stu.stu_name | upper}} <!-- upper/lower:大小写转换 -->
+
+分数乘法运算 -- widthratio 数 分母 分子
+    example:语文成绩乘以10：{% widthratio stu.stu_chinese 1 10 %} 
+            <!-- stu.stu_chinese * 10(分子) / 1（分母）-->
+
+整除运算 -- divisibleby:2 整除2，返回True,否则返回False
+    example:数学成绩：{{ stu.stu_math | divisibleby:2}}  
+            <!-- 判断数学成绩是否能整除2 -->
+
+命名空间
+    {% url 'namespace:name' value %}
+    工程url中定义namespace
+    模块url中定义name
+
+request
+    post 提交数据隐藏了
+    get 提交数据在url上, ?xx= xxx 对参数的数量有限制，每个浏览器的限制不同
+    put 更新全部数据
+    patch 更新局部数据
+    delete:删除数据 example:stu_id = request.GET.get('stu_id')
+                            Student.objects.filter(id=stu_id).delete()
+
+code:200 请求成功 code:状态码
+
+form
+    <input type='text'>
+    <input type='date'>
+    <input type='files'>
+
+QueryDict和dict的区别:
+    QueryDict定义在django.http.QueryDict,request对象的属性GET、POST都是QueryDict类型的对象,与python字典(dict)不同，QueryDict类型的对象用来处理同一个键带有多个值的情况
+
+作业:
+1、添加学生信息页面，提交跳转到添加学生拓展详细页面
+2、详细页面保存信息
+
+设计到学生表和学生拓展表，一对一
+
+-------------------------------------------------  20180427 ------------------------------------------------------
+cookie:随着url移动，在浏览器
+session:在数据库
+set_cookie(key,value,seconds):设置cookie
+del_cookie():删除cookie
+
+令牌有过期时间，可以设置
+服务器的令牌时间，放在mysql或mongodb
+
+
+同一个浏览器登录两个qq空间，内容会互串 --> 原因:浏览器只能就一个应用程序保存一个cookie，即后登陆的空间的cookie,再访问的便是后登陆空间的内容
+
+cookie中是否有权限:cookie只是用于保存专属于一个特定用户的令牌，将每个用户分隔开来，用于和数据库端的令牌进行比对成功后进行后续操作而无需再输入帐号密码（一般cookie有生存时间，超时cookie将被删除，则需要重新登录，类似于淘宝、天猫长时间不操作便会要求重新登录),至于权限，数据库中应当专门存储权限表，并和指定用户关联
+
+cookie加密:不用，明码传输即可，一个人创建的令牌叫ticket，则另一个人创建的令牌则可能叫session
+
+                
+# 绑定令牌到cookie里面，并将cookie存在前端
+ticket = 'lalala'
+response = HttpResponse()
+response.set_cookie('ticket',ticket)
+return response
+
+# cookie存在数据库中
+user.u_ticket = ticket
+user.save()
+
+
+作业
+1、使用django自带的登录、注册、注销功能重写登录-注册-注销模块
+
+-------------------------------------------------------------
+1、set_cookies(key, value, max_age=10) -- 创建cookie
+   max_age:在浏览器中的存活时间
+   
+2、加载static
+第一种方法：
+{% load static %}
+{% static '' %}
+
+第二种方法：
+/static/xxx.css
+
+3、delete_cookie(key)  -- 删除cookie
+
+4、上传图片
+pip install Pillow 专门用来处理图片
+页面form中添加enctype="multipart/form-data: 需要上传文件的时候加
+
+5、面向切面编码 AOP
+
+装饰器
+def x(func f):
+    def g():
+       # 登录验证...
+       f()
+
+中间件  脚本都放置在utils文件夹中
+
+过滤请求的方式（下列函数名称固定，其所属的中间件类名可以随意）
+    process_request:请求过来时过滤，urls之前
+    process_response:在响应返回浏览器之前调用
+    process_view:调用视图之前执行
+    process_templates_response:在视图刚好执行完的时候调用
+
+6、埋点
+SEO url点击率  pv uv
+UV访问数（Unique Visitor):指独立访客访问数
+PV访问量（Page View):即页面访问量
+作业:统计添加学生的点击次数。即:url /stu/addStu post请求的次数
+
+
+count:数据总数
+page_range:页数列表 [1,2,3]
+
+page对象
+    has_next:是否有下一页
+    next_page_number:下一页页数
+
+    has_previous:是否有上一页
+    previous_page_number:上一页页数
+
+------------------------------- 20180503 ------------------------------------
+1、错误提示
+Users objects not attr is_authenticated:自定义的User模型没有is_authenticated方法，只有导入django.contrib的auth模块,才能调用该方法
+
+2、登录注册:自行实现/django自带的登录功能
+
+3、前后分离    
+前端:vue.js -- 是一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动。
+
+后端:rest framework -- 一个强大而灵活的Web API工具
+
+4、restful风格
+    一种软件架构风格、设计风格，而不是标准，只是提供了一组设计原则和约束条件。它主要用于客户端和服务器交互类的软件。基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。
+
+rest:Rest是所有Web应用都应该遵守的架构设计指导原则
+     面向资源是Rest最明显的特征，对于同一个资源的一组不同的操作(GET POST DELETE PUT)
+
+5、日志logging:记录程序运行状态，辅助调试
+    四个组成:
+        loggers:接收传入的信息,交给handlers处理
+        handlers:用来处理信息
+        filters:过滤logger传递给handlers的信息，加一些处理控制
+        formatters:格式化，将我们需要保存到日志文件中的信息进行统一格式化
+
+错误等级:
+    CRITICAL>ERROR>WARNING>INFO>DEBUG
+    critical:重大的bug
+    error:系统里面有错误
+    warning:警告
+    info:正常
+    debug:调试信息
+
+6、安装restframework
+pip install djangorestframework
+pip install django-filter
+  
+附: 高版本的django有log还是低版本的有 --> 低版本
+    os.path.isdir(xxx):判断指定路径是否为文件夹
+
+----------------------------- 20180504 --------------------------------------
+1、ajax(例子如下)
+function add(){
+    csrf = $('input[name="csrfmiddlewaretoken"]').val();
+    s_name = $('#s_name').val();
+    s_tel = $('#s_tel').val();
+    $.ajax({
+        url:'/stuapp/student/',
+        type:'POST',
+        data:{'s_name':s_name,'s_tel':s_tel},  //向后端传递数据，以字典的形式
+        dataType:'json',
+        headers:{'X-CSRFToken':csrf},
+        success:function () {
+            alert('添加成功')
+        },
+        error:function () {
+            alert('添加失败')
+        }
+    });
+}
+{% csrf_token %}
+
+2、form表单提交
+1)开启中间件django.middleware.csrf.CsrfViewMiddleware
+2){% csrf_token %},等同如下:
+<input type='hidden' name='csrfmiddlewaretoken' value='duRoaLbyewAO7aLxV0HZyOWB9npPqLs01a27Y3nnqg2h8lTJjkcQdeiKzfpZJdX0' />
+
+3、ajax删除(delete)
+1)开启中间件django.middleware.csrf.CsrfViewMiddleware
+2)csrf = $('input[name="csrfmiddlewaretoken"]').val()
+  headers:{'X-CSRFToken': csrf}
+
+4、ajax局部更新(patch)、创建(post):注意细节同上，否则会出现403 Forbidden错误
+
+5、
+rest_framework返回结构
+原生(json格式)：
+[{"id":11,"s_name":"测试1","s_tel":"12121212","s_addr":""},{"id":12,"s_name":"顺悟空","s_tel":"17897654331","s_addr":""},{"id":15,"s_name":"张三丰","s_tel":"134456778","s_addr":""}]
+
+上述格式反馈给前端不够友好，可以修改为以下格式:
+{
+    
+     "code": 0,
+  
+     "msg": "请求成功",
+    
+     "data": [
+{
+            
+         "id": 6,
+            
+         "s_name": "李宁",
+            
+         "s_tel": "666668888",
+            
+         "s_addr": "武侯区"
+       
+     }]
+}
+则需要继承JSONRenderer，重构render方法
+
+6、patch 变量为空，在serializers.py（序列化文件）中可以自定义错误名称
+s_name = serializers.CharField(  
+    error_messages={
+        'blank':'用户名不能为空',
+        'max_length':'用户名不能超过十个字符'
+    },
+    max_length=10
+)
+
+显示结果如下：
+{
+    "code": 0,
+    "msg": "请求成功",
+    "data": {
+        "s_name": [
+            "用户名不能为空"
+        ]
+    }
+}
+
+
+
+
+
+

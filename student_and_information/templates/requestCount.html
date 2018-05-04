@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>各类请求情况</title>
+</head>
+<body>
+    {% for rc in requestcount %}
+        pathname: {{ rc.c_path_name }}
+        click_count: {{ rc.c_path_count }}
+        <br>
+    {% endfor %}
+</body>
+</html>
